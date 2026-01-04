@@ -10,6 +10,7 @@ use std::{
 use portable_pty::{native_pty_system, Child, ChildKiller, CommandBuilder, PtyPair, PtySize};
 use tauri::{
     async_runtime::{Mutex, RwLock},
+    ipc::Response,
     plugin::{Builder, TauriPlugin},
     AppHandle, Manager, Runtime,
 };
@@ -29,11 +30,6 @@ struct Session {
 }
 
 type PtyHandler = u32;
-
-#[derive(Clone, serde::Serialize, serde::Deserialize)]
-struct Payload {
-    message: String,
-}
 
 #[tauri::command]
 async fn spawn<R: Runtime>(
@@ -118,7 +114,7 @@ async fn write(
 }
 
 #[tauri::command]
-async fn read(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<String, String> {
+async fn read(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<Vec<u8>, String> {
     let session = state
         .sessions
         .read()
@@ -126,14 +122,15 @@ async fn read(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<S
         .get(&pid)
         .ok_or("Unavaliable pid")?
         .clone();
-    let mut buf = [0u8; 1024];
+    let mut buf = vec![0u8; 4096];
     let n = session
         .reader
         .lock()
         .await
         .read(&mut buf)
         .map_err(|e| e.to_string())?;
-    Ok(String::from_utf8_lossy(&buf[..n]).to_string())
+    buf.truncate(n);
+    Ok(buf)
 }
 
 #[tauri::command]

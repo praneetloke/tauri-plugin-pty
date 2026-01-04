@@ -26,7 +26,7 @@ export interface IPty {
     readonly rows: number;
     readonly process: string;
     handleFlowControl: boolean;
-    readonly onData: IEvent<string>;
+    readonly onData: IEvent<Uint8Array>;
     readonly onExit: IEvent<{
         exitCode: number;
         signal?: number;

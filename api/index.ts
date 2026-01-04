@@ -142,7 +142,7 @@ export interface IPty {
      * the pty.
      * @returns an `IDisposable` to stop listening.
      */
-    readonly onData: IEvent<string>;
+    readonly onData: IEvent<Uint8Array>;
 
     /**
      * Adds an event listener for when an exit event fires. This happens when the pty exits.
@@ -217,7 +217,7 @@ class TauriPty implements IPty, IDisposable {
     private _exitted: boolean;
     private _init: Promise<void>;
 
-    private _onData = new EventEmitter2<string>();
+    private _onData = new EventEmitter2<Uint8Array>();
     private _onExit = new EventEmitter2<{ exitCode: number; signal?: number | undefined; }>();
 
     constructor(file: string, args?: ArgvOrCommandLine, opt?: IWindowsPtyForkOptions) {
@@ -245,7 +245,7 @@ class TauriPty implements IPty, IDisposable {
         throw new Error("Method not implemented.");
     }
 
-    public get onData(): IEvent<string> { return this._onData.event; }
+    public get onData(): IEvent<Uint8Array> { return this._onData.event; }
     public get onExit(): IEvent<{ exitCode: number; signal?: number | undefined; }> { return this._onExit.event; }
 
     resize(columns: number, rows: number): void {
@@ -283,7 +283,7 @@ class TauriPty implements IPty, IDisposable {
         await this._init;
         try {
             for (; ;) {
-                const data = await invoke<string>('plugin:pty|read', { pid: this.pid });
+                const data = await invoke<Uint8Array>('plugin:pty|read', { pid: this.pid });
                 this._onData.fire(data);
             }
         } catch (e: any) {
