@@ -10,7 +10,6 @@ use std::{
 use portable_pty::{native_pty_system, Child, ChildKiller, CommandBuilder, PtyPair, PtySize};
 use tauri::{
     async_runtime::{Mutex, RwLock},
-    ipc::Response,
     plugin::{Builder, TauriPlugin},
     AppHandle, Manager, Runtime,
 };
