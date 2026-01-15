@@ -1,6 +1,7 @@
 use std::{
     collections::BTreeMap,
     ffi::OsString,
+    io::Error,
     sync::{
         atomic::{AtomicU32, Ordering},
         Arc,
@@ -128,8 +129,13 @@ async fn read(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<V
         .await
         .read(&mut buf)
         .map_err(|e| e.to_string())?;
-    buf.truncate(n);
-    Ok(buf)
+    match n {
+        i if i > 0 => {
+            buf.truncate(n);
+            Ok(buf)
+        }
+        _ => Err(String::from("EOF")),
+    }
 }
 
 #[tauri::command]
