@@ -130,7 +130,7 @@ async fn read(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<V
         .map_err(|e| e.to_string())?;
     match n {
         i if i > 0 => {
-            buf.truncate(n);
+            buf.truncate(i);
             Ok(buf)
         }
         _ => Err(String::from("EOF")),
