@@ -1,7 +1,6 @@
 use std::{
     collections::BTreeMap,
     ffi::OsString,
-    io::Error,
     sync::{
         atomic::{AtomicU32, Ordering},
         Arc,
