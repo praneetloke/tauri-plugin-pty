@@ -128,12 +128,11 @@ async fn read(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<V
         .await
         .read(&mut buf)
         .map_err(|e| e.to_string())?;
-    match n {
-        i if i > 0 => {
-            buf.truncate(i);
-            Ok(buf)
-        }
-        _ => Err(String::from("EOF")),
+    if n == 0 {
+        Err(String::from("EOF"))
+    } else {
+        buf.truncate(n);
+        Ok(buf)
     }
 }
 
