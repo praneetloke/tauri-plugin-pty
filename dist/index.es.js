@@ -71,7 +71,7 @@ function spawn(file, args, options) {
 }
 class TauriPty {
     constructor(file, args, opt) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
         this._onData = new EventEmitter2();
         this._onExit = new EventEmitter2();
         args = typeof args === 'string' ? [args] : args !== null && args !== void 0 ? args : [];
@@ -87,6 +87,10 @@ class TauriPty {
             flowControlPause: (_h = opt === null || opt === void 0 ? void 0 : opt.flowControlPause) !== null && _h !== void 0 ? _h : null,
             flowControlResume: (_j = opt === null || opt === void 0 ? void 0 : opt.flowControlResume) !== null && _j !== void 0 ? _j : null,
         };
+        this.cols = (_k = opt === null || opt === void 0 ? void 0 : opt.cols) !== null && _k !== void 0 ? _k : 80;
+        this.rows = (_l = opt === null || opt === void 0 ? void 0 : opt.rows) !== null && _l !== void 0 ? _l : 24;
+        this.process = file;
+        this.handleFlowControl = (_m = opt === null || opt === void 0 ? void 0 : opt.handleFlowControl) !== null && _m !== void 0 ? _m : false;
         this._exitted = false;
         this._init = invoke('plugin:pty|spawn', invokeArgs).then(pid => {
             this.pid = pid;

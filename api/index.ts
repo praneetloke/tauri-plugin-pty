@@ -208,7 +208,7 @@ export interface IEvent<T> {
 export type ArgvOrCommandLine = string[] | string;
 
 class TauriPty implements IPty, IDisposable {
-    pid: number;
+    pid!: number;
     cols: number;
     rows: number;
     process: string;
@@ -234,6 +234,11 @@ class TauriPty implements IPty, IDisposable {
             flowControlPause: opt?.flowControlPause ?? null,
             flowControlResume: opt?.flowControlResume ?? null,
         };
+        // VT100 Size by default
+        this.cols = opt?.cols ?? 80;
+        this.rows = opt?.rows ?? 24;
+        this.process = file;
+        this.handleFlowControl = opt?.handleFlowControl ?? false;
         this._exitted = false;
         this._init = invoke<number>('plugin:pty|spawn', invokeArgs).then(pid => {
             this.pid = pid;

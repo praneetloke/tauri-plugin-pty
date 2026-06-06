@@ -113,7 +113,10 @@ async fn write(
 }
 
 #[tauri::command]
-async fn read(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<tauri::ipc::Response, String> {
+async fn read(
+    pid: PtyHandler,
+    state: tauri::State<'_, PluginState>,
+) -> Result<tauri::ipc::Response, String> {
     let session = state
         .sessions
         .read()
