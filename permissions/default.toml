@@ -7,4 +7,5 @@ permissions = [
     "allow-resize",
     "allow-kill",
     "allow-exitstatus",
+    "allow-get_all_pids",
 ]
