@@ -79,7 +79,7 @@ function getAllPids() {
 }
 class TauriPty {
     constructor(pidOrFile, args, opt) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         this._onData = new EventEmitter2();
         this._onExit = new EventEmitter2();
         this.cols = (_a = opt === null || opt === void 0 ? void 0 : opt.cols) !== null && _a !== void 0 ? _a : 80;
@@ -101,14 +101,14 @@ class TauriPty {
             file: pidOrFile,
             args,
             termName: (_d = opt === null || opt === void 0 ? void 0 : opt.name) !== null && _d !== void 0 ? _d : "Terminal",
-            cols: (_e = opt === null || opt === void 0 ? void 0 : opt.cols) !== null && _e !== void 0 ? _e : null,
-            rows: (_f = opt === null || opt === void 0 ? void 0 : opt.rows) !== null && _f !== void 0 ? _f : null,
-            cwd: (_g = opt === null || opt === void 0 ? void 0 : opt.cwd) !== null && _g !== void 0 ? _g : null,
-            env: (_h = opt === null || opt === void 0 ? void 0 : opt.env) !== null && _h !== void 0 ? _h : {},
-            encoding: (_j = opt === null || opt === void 0 ? void 0 : opt.encoding) !== null && _j !== void 0 ? _j : null,
-            handleFlowControl: (_k = opt === null || opt === void 0 ? void 0 : opt.handleFlowControl) !== null && _k !== void 0 ? _k : null,
-            flowControlPause: (_l = opt === null || opt === void 0 ? void 0 : opt.flowControlPause) !== null && _l !== void 0 ? _l : null,
-            flowControlResume: (_m = opt === null || opt === void 0 ? void 0 : opt.flowControlResume) !== null && _m !== void 0 ? _m : null,
+            cols: this.cols,
+            rows: this.rows,
+            cwd: (_e = opt === null || opt === void 0 ? void 0 : opt.cwd) !== null && _e !== void 0 ? _e : null,
+            env: (_f = opt === null || opt === void 0 ? void 0 : opt.env) !== null && _f !== void 0 ? _f : {},
+            encoding: (_g = opt === null || opt === void 0 ? void 0 : opt.encoding) !== null && _g !== void 0 ? _g : null,
+            handleFlowControl: this.handleFlowControl,
+            flowControlPause: (_h = opt === null || opt === void 0 ? void 0 : opt.flowControlPause) !== null && _h !== void 0 ? _h : null,
+            flowControlResume: (_j = opt === null || opt === void 0 ? void 0 : opt.flowControlResume) !== null && _j !== void 0 ? _j : null,
         };
         this._init = invoke("plugin:pty|spawn", invokeArgs).then((pid) => {
             this.pid = pid;
