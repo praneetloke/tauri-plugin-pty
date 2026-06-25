@@ -307,6 +307,18 @@
           "markdownDescription": "Denies the exitstatus command without any pre-configured scope."
         },
         {
+          "description": "Enables the get_all_pids command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-get-all-pids",
+          "markdownDescription": "Enables the get_all_pids command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the get_all_pids command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-get-all-pids",
+          "markdownDescription": "Denies the get_all_pids command without any pre-configured scope."
+        },
+        {
           "description": "Enables the kill command without any pre-configured scope.",
           "type": "string",
           "const": "allow-kill",

@@ -50,6 +50,32 @@ Denies the exitstatus command without any pre-configured scope.
 <tr>
 <td>
 
+`pty:allow-get-all-pids`
+
+</td>
+<td>
+
+Enables the get_all_pids command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`pty:deny-get-all-pids`
+
+</td>
+<td>
+
+Denies the get_all_pids command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
 `pty:allow-kill`
 
 </td>
