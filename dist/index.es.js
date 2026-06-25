@@ -72,6 +72,11 @@ function spawn(file, args, options) {
 function attach(pid) {
     return new TauriPty(pid);
 }
+function getAllPids() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield invoke("plugin:pty|get_all_pids");
+    });
+}
 class TauriPty {
     constructor(pidOrFile, args, opt) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
@@ -182,5 +187,5 @@ class TauriPty {
     }
 }
 
-export { attach, spawn };
+export { attach, getAllPids, spawn };
 //# sourceMappingURL=index.es.js.map
