@@ -271,7 +271,7 @@ class TauriPty implements IPty, IDisposable {
 
     args = typeof args === "string" ? [args] : (args ?? []); // Convert args to string[] anyways.
     const invokeArgs = {
-      pidOrFile,
+      file: pidOrFile,
       args,
       termName: opt?.name ?? "Terminal",
       cols: opt?.cols ?? null,
