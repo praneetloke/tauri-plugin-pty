@@ -25,8 +25,18 @@ export function spawn(
   return new TauriPty(file, args, options);
 }
 
+/**
+ * Attach to an existing PTY process.
+ *
+ * @param pid The PID for an existing PTY process.
+ * @returns
+ */
 export function attach(pid: number): IPty {
   return new TauriPty(pid);
+}
+
+export async function getAllPids() {
+  await invoke("plugin:pty|get_all_pids");
 }
 
 export interface IBasePtyForkOptions {
