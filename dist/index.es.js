@@ -98,7 +98,7 @@ class TauriPty {
         this.process = pidOrFile;
         args = typeof args === "string" ? [args] : (args !== null && args !== void 0 ? args : []);
         const invokeArgs = {
-            pidOrFile,
+            file: pidOrFile,
             args,
             termName: (_d = opt === null || opt === void 0 ? void 0 : opt.name) !== null && _d !== void 0 ? _d : "Terminal",
             cols: (_e = opt === null || opt === void 0 ? void 0 : opt.cols) !== null && _e !== void 0 ? _e : null,
