@@ -36,7 +36,7 @@ export function attach(pid: number): IPty {
 }
 
 export async function getAllPids() {
-  await invoke("plugin:pty|get_all_pids");
+  return await invoke("plugin:pty|get_all_pids");
 }
 
 export interface IBasePtyForkOptions {

@@ -74,7 +74,7 @@ function attach(pid) {
 }
 function getAllPids() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield invoke("plugin:pty|get_all_pids");
+        return yield invoke("plugin:pty|get_all_pids");
     });
 }
 class TauriPty {
