@@ -101,7 +101,7 @@ async fn write(
         .read()
         .await
         .get(&pid)
-        .ok_or("Unavaliable pid")?
+        .ok_or("Unavailable pid")?
         .clone();
     session
         .writer
@@ -122,7 +122,7 @@ async fn read(
         .read()
         .await
         .get(&pid)
-        .ok_or("Unavaliable pid")?
+        .ok_or("Unavailable pid")?
         .clone();
     let mut buf = vec![0u8; 4096];
     let n = session
@@ -151,7 +151,7 @@ async fn resize(
         .read()
         .await
         .get(&pid)
-        .ok_or("Unavaliable pid")?
+        .ok_or("Unavailable pid")?
         .clone();
     session
         .pair
@@ -175,7 +175,7 @@ async fn kill(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<(
         .read()
         .await
         .get(&pid)
-        .ok_or("Unavaliable pid")?
+        .ok_or("Unavailable pid")?
         .clone();
     session
         .child_killer
@@ -190,10 +190,10 @@ async fn kill(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<(
 async fn exitstatus(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<u32, String> {
     let session = state
         .sessions
-        .write()
+        .read()
         .await
-        .remove(&pid)
-        .ok_or("Unavaliable pid")?
+        .get(&pid)
+        .ok_or("Unavailable pid")?
         .clone();
     let exitstatus = session
         .child
@@ -202,6 +202,11 @@ async fn exitstatus(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Re
         .wait()
         .map_err(|e| e.to_string())?
         .exit_code();
+
+    // Must remove the session from the state
+    // only after the child has exited.
+    let _ = state.sessions.write().await.remove(&pid);
+
     Ok(exitstatus)
 }
 
