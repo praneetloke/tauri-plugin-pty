@@ -35,7 +35,7 @@ export function attach(pid: number): IPty {
   return new TauriPty(pid);
 }
 
-export async function getAllPids() {
+export async function getAllPids(): Promise<number[]> {
   return await invoke("plugin:pty|get_all_pids");
 }
 

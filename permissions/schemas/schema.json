@@ -391,10 +391,10 @@
           "markdownDescription": "Denies the write command without any pre-configured scope."
         },
         {
-          "description": "Allows the spawn command\n#### This default permission set includes:\n\n- `allow-spawn`\n- `allow-read`\n- `allow-write`\n- `allow-resize`\n- `allow-kill`\n- `allow-exitstatus`\n- `allow-get_all_pids`",
+          "description": "Allows the spawn command\n#### This default permission set includes:\n\n- `allow-spawn`\n- `allow-read`\n- `allow-write`\n- `allow-resize`\n- `allow-kill`\n- `allow-exitstatus`\n- `allow-get-all-pids`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Allows the spawn command\n#### This default permission set includes:\n\n- `allow-spawn`\n- `allow-read`\n- `allow-write`\n- `allow-resize`\n- `allow-kill`\n- `allow-exitstatus`\n- `allow-get_all_pids`"
+          "markdownDescription": "Allows the spawn command\n#### This default permission set includes:\n\n- `allow-spawn`\n- `allow-read`\n- `allow-write`\n- `allow-resize`\n- `allow-kill`\n- `allow-exitstatus`\n- `allow-get-all-pids`"
         }
       ]
     }

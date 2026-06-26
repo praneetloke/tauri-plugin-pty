@@ -10,7 +10,7 @@ Allows the spawn command
 - `allow-resize`
 - `allow-kill`
 - `allow-exitstatus`
-- `allow-get_all_pids`
+- `allow-get-all-pids`
 
 ## Permission Table
 

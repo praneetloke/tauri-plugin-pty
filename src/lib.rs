@@ -190,9 +190,9 @@ async fn kill(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<(
 async fn exitstatus(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<u32, String> {
     let session = state
         .sessions
-        .read()
+        .write()
         .await
-        .get(&pid)
+        .remove(&pid)
         .ok_or("Unavaliable pid")?
         .clone();
     let exitstatus = session
