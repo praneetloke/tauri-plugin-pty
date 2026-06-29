@@ -101,7 +101,7 @@ async fn write(
         .read()
         .await
         .get(&pid)
-        .ok_or("Unavaliable pid")?
+        .ok_or("Unavailable pid")?
         .clone();
     session
         .writer
@@ -122,7 +122,7 @@ async fn read(
         .read()
         .await
         .get(&pid)
-        .ok_or("Unavaliable pid")?
+        .ok_or("Unavailable pid")?
         .clone();
     let mut buf = vec![0u8; 4096];
     let n = session
@@ -151,7 +151,7 @@ async fn resize(
         .read()
         .await
         .get(&pid)
-        .ok_or("Unavaliable pid")?
+        .ok_or("Unavailable pid")?
         .clone();
     session
         .pair
@@ -175,7 +175,7 @@ async fn kill(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Result<(
         .read()
         .await
         .get(&pid)
-        .ok_or("Unavaliable pid")?
+        .ok_or("Unavailable pid")?
         .clone();
     session
         .child_killer
@@ -193,7 +193,7 @@ async fn exitstatus(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Re
         .read()
         .await
         .get(&pid)
-        .ok_or("Unavaliable pid")?
+        .ok_or("Unavailable pid")?
         .clone();
     let exitstatus = session
         .child
@@ -202,14 +202,37 @@ async fn exitstatus(pid: PtyHandler, state: tauri::State<'_, PluginState>) -> Re
         .wait()
         .map_err(|e| e.to_string())?
         .exit_code();
+
+    // Must remove the session from the state
+    // only after the child has exited.
+    let _ = state.sessions.write().await.remove(&pid);
+
     Ok(exitstatus)
+}
+
+#[tauri::command]
+async fn get_all_pids(state: tauri::State<'_, PluginState>) -> Result<Vec<PtyHandler>, String> {
+    let sessions = state.sessions.read().await.clone();
+
+    let mut session_pids = vec![];
+    for (key, _value) in sessions.iter() {
+        session_pids.push(key.clone());
+    }
+
+    Ok(session_pids)
 }
 
 /// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::<R>::new("pty")
         .invoke_handler(tauri::generate_handler![
-            spawn, write, read, resize, kill, exitstatus
+            spawn,
+            write,
+            read,
+            resize,
+            kill,
+            exitstatus,
+            get_all_pids
         ])
         .setup(|app_handle, _api| {
             app_handle.manage(PluginState::default());

@@ -10,6 +10,7 @@ Allows the spawn command
 - `allow-resize`
 - `allow-kill`
 - `allow-exitstatus`
+- `allow-get-all-pids`
 
 ## Permission Table
 
@@ -42,6 +43,32 @@ Enables the exitstatus command without any pre-configured scope.
 <td>
 
 Denies the exitstatus command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`pty:allow-get-all-pids`
+
+</td>
+<td>
+
+Enables the get_all_pids command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`pty:deny-get-all-pids`
+
+</td>
+<td>
+
+Denies the get_all_pids command without any pre-configured scope.
 
 </td>
 </tr>

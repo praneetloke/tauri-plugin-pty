@@ -69,30 +69,48 @@ class EventEmitter2 {
 function spawn(file, args, options) {
     return new TauriPty(file, args, options);
 }
+function attach(pid) {
+    return new TauriPty(pid);
+}
+function getAllPids() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield invoke("plugin:pty|get_all_pids");
+    });
+}
 class TauriPty {
-    constructor(file, args, opt) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    constructor(pidOrFile, args, opt) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
         this._onData = new EventEmitter2();
         this._onExit = new EventEmitter2();
-        args = typeof args === 'string' ? [args] : args !== null && args !== void 0 ? args : [];
+        this.cols = (_a = opt === null || opt === void 0 ? void 0 : opt.cols) !== null && _a !== void 0 ? _a : 80;
+        this.rows = (_b = opt === null || opt === void 0 ? void 0 : opt.rows) !== null && _b !== void 0 ? _b : 24;
+        this.handleFlowControl = (_c = opt === null || opt === void 0 ? void 0 : opt.handleFlowControl) !== null && _c !== void 0 ? _c : false;
+        this._exitted = false;
+        if (typeof pidOrFile === "number") {
+            this.process = "";
+            this._init = Promise.resolve().then(() => {
+                this.pid = pidOrFile;
+                this.readData();
+                this.wait();
+            });
+            return;
+        }
+        this.process = pidOrFile;
+        args = typeof args === "string" ? [args] : (args !== null && args !== void 0 ? args : []);
         const invokeArgs = {
-            file, args,
-            termName: (_a = opt === null || opt === void 0 ? void 0 : opt.name) !== null && _a !== void 0 ? _a : 'Terminal',
-            cols: (_b = opt === null || opt === void 0 ? void 0 : opt.cols) !== null && _b !== void 0 ? _b : null,
-            rows: (_c = opt === null || opt === void 0 ? void 0 : opt.rows) !== null && _c !== void 0 ? _c : null,
-            cwd: (_d = opt === null || opt === void 0 ? void 0 : opt.cwd) !== null && _d !== void 0 ? _d : null,
-            env: (_e = opt === null || opt === void 0 ? void 0 : opt.env) !== null && _e !== void 0 ? _e : {},
-            encoding: (_f = opt === null || opt === void 0 ? void 0 : opt.encoding) !== null && _f !== void 0 ? _f : null,
-            handleFlowControl: (_g = opt === null || opt === void 0 ? void 0 : opt.handleFlowControl) !== null && _g !== void 0 ? _g : null,
+            file: pidOrFile,
+            args,
+            termName: (_d = opt === null || opt === void 0 ? void 0 : opt.name) !== null && _d !== void 0 ? _d : "Terminal",
+            cols: this.cols,
+            rows: this.rows,
+            cwd: (_e = opt === null || opt === void 0 ? void 0 : opt.cwd) !== null && _e !== void 0 ? _e : null,
+            env: (_f = opt === null || opt === void 0 ? void 0 : opt.env) !== null && _f !== void 0 ? _f : {},
+            encoding: (_g = opt === null || opt === void 0 ? void 0 : opt.encoding) !== null && _g !== void 0 ? _g : null,
+            handleFlowControl: this.handleFlowControl,
             flowControlPause: (_h = opt === null || opt === void 0 ? void 0 : opt.flowControlPause) !== null && _h !== void 0 ? _h : null,
             flowControlResume: (_j = opt === null || opt === void 0 ? void 0 : opt.flowControlResume) !== null && _j !== void 0 ? _j : null,
         };
-        this.cols = (_k = opt === null || opt === void 0 ? void 0 : opt.cols) !== null && _k !== void 0 ? _k : 80;
-        this.rows = (_l = opt === null || opt === void 0 ? void 0 : opt.rows) !== null && _l !== void 0 ? _l : 24;
-        this.process = file;
-        this.handleFlowControl = (_m = opt === null || opt === void 0 ? void 0 : opt.handleFlowControl) !== null && _m !== void 0 ? _m : false;
-        this._exitted = false;
-        this._init = invoke('plugin:pty|spawn', invokeArgs).then(pid => {
+        this._init = invoke("plugin:pty|spawn", invokeArgs).then((pid) => {
             this.pid = pid;
             this.readData();
             this.wait();
@@ -101,25 +119,29 @@ class TauriPty {
     dispose() {
         throw new Error("Method not implemented.");
     }
-    get onData() { return this._onData.event; }
-    get onExit() { return this._onExit.event; }
+    get onData() {
+        return this._onData.event;
+    }
+    get onExit() {
+        return this._onExit.event;
+    }
     resize(columns, rows) {
         this.cols = columns;
         this.rows = rows;
-        this._init.then(() => invoke('plugin:pty|resize', { pid: this.pid, cols: columns, rows }).catch(e => {
-            console.error('Resize error: ', e);
+        this._init.then(() => invoke("plugin:pty|resize", { pid: this.pid, cols: columns, rows }).catch((e) => {
+            console.error("Resize error: ", e);
         }));
     }
     clear() {
         console.warn("clear is un implemented!");
     }
     write(data) {
-        this._init.then(() => invoke('plugin:pty|write', { pid: this.pid, data }).catch(e => {
-            console.error('Writing error: ', e);
+        this._init.then(() => invoke("plugin:pty|write", { pid: this.pid, data }).catch((e) => {
+            console.error("Writing error: ", e);
         }));
     }
     kill(signal) {
-        this._init.then(() => invoke('plugin:pty|kill', { pid: this.pid }));
+        this._init.then(() => invoke("plugin:pty|kill", { pid: this.pid }));
     }
     pause() {
         throw new Error("Method not implemented.");
@@ -132,15 +154,17 @@ class TauriPty {
             yield this._init;
             try {
                 for (;;) {
-                    const data = yield invoke('plugin:pty|read', { pid: this.pid });
+                    const data = yield invoke("plugin:pty|read", {
+                        pid: this.pid,
+                    });
                     this._onData.fire(new Uint8Array(data));
                 }
             }
             catch (e) {
-                if (typeof e === 'string' && e.includes('EOF')) {
+                if (typeof e === "string" && e.includes("EOF")) {
                     return;
                 }
-                console.error('Reading error: ', e);
+                console.error("Reading error: ", e);
             }
         });
     }
@@ -150,7 +174,9 @@ class TauriPty {
                 return;
             }
             try {
-                const exitCode = yield invoke('plugin:pty|exitstatus', { pid: this.pid });
+                const exitCode = yield invoke("plugin:pty|exitstatus", {
+                    pid: this.pid,
+                });
                 this._exitted = true;
                 this._onExit.fire({ exitCode });
             }
@@ -161,5 +187,5 @@ class TauriPty {
     }
 }
 
-export { spawn };
+export { attach, getAllPids, spawn };
 //# sourceMappingURL=index.es.js.map

@@ -1,4 +1,6 @@
 export declare function spawn(file: string, args: string[] | string, options: IPtyForkOptions | IWindowsPtyForkOptions): IPty;
+export declare function attach(pid: number): IPty;
+export declare function getAllPids(): Promise<number[]>;
 export interface IBasePtyForkOptions {
     name?: string;
     cols?: number;
